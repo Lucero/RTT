@@ -1,4 +1,4 @@
-#include "log.h"
+﻿#include "log.h"
 
 uint32_t (*Log_GetMicrosecondStamp)(void);
 uint32_t (*Log_GetMillisecondStamp)(void);
