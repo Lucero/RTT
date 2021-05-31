@@ -38,7 +38,7 @@ Revision: $Rev: 0.1 $
 // Up-channel 1: SystemView
 //
 #ifndef   RTT_MAX_NUM_UP_BUFFERS
-  #define RTT_MAX_NUM_UP_BUFFERS             (3)            // Max. number of up-buffers (T->H) available on this target    (Default: 3)
+  #define RTT_MAX_NUM_UP_BUFFERS             (/*#RTT_MAX_NUM_UP_BUFFERS#*/)            // Max. number of up-buffers (T->H) available on this target    (Default: 3)
 #endif
 //
 // Most common case:
@@ -46,15 +46,7 @@ Revision: $Rev: 0.1 $
 // Down-channel 1: SystemView
 //
 #ifndef   RTT_MAX_NUM_DOWN_BUFFERS
-  #define RTT_MAX_NUM_DOWN_BUFFERS           (3)            // Max. number of down-buffers (H->T) available on this target  (Default: 3)
-#endif
-
-#ifndef   BUFFER_SIZE_UP
-  #define BUFFER_SIZE_UP                     (1024)         // Size of the buffer for terminal output of target, up to host (Default: 1k)
-#endif
-
-#ifndef   BUFFER_SIZE_DOWN
-  #define BUFFER_SIZE_DOWN                   (16)           // Size of the buffer for terminal input to target from host (Usually keyboard input) (Default: 16)
+  #define RTT_MAX_NUM_DOWN_BUFFERS           (/*#RTT_MAX_NUM_UP_BUFFERS#*/)            // Max. number of down-buffers (H->T) available on this target  (Default: 3)
 #endif
 
 #ifndef   RTT_PRINTF_BUFFER_SIZE

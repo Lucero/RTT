@@ -225,10 +225,8 @@ static unsigned char _aTerminalId[16] = { '0', '1', '2', '3', '4', '5', '6', '7'
 //
 // RTT Control Block and allocate buffers for channel 0
 //
-#define RTT_START_ADDR (0X20000000 + 0x10000 - sizeof(_RTT) - RTT__ROUND_UP_2_CACHE_LINE_SIZE(BUFFER_SIZE_UP) - RTT__ROUND_UP_2_CACHE_LINE_SIZE(BUFFER_SIZE_DOWN))
-RTT_PUT_CB_SECTION(RTT_CB_ALIGN(RTT_CB _RTT __attribute__ ((at(RTT_START_ADDR)))));
-RTT_PUT_BUFFER_SECTION(RTT_BUFFER_ALIGN(static char _acUpBuffer  [RTT__ROUND_UP_2_CACHE_LINE_SIZE(BUFFER_SIZE_UP)] __attribute__ ((at(RTT_START_ADDR + sizeof(_RTT)))) ));
-RTT_PUT_BUFFER_SECTION(RTT_BUFFER_ALIGN(static char _acDownBuffer[RTT__ROUND_UP_2_CACHE_LINE_SIZE(BUFFER_SIZE_DOWN)]  __attribute__ ((at(RTT_START_ADDR + sizeof(_RTT) + sizeof(_acUpBuffer)))) ));
+RTT_PUT_CB_SECTION(RTT_CB_ALIGN(RTT_CB _RTT));
+/*#RTT_BUFFERS_DEFINE#*/
 
 static unsigned char _ActiveTerminal;
 
@@ -267,23 +265,13 @@ static void _DoInit(void) {
   p->MaxNumUpBuffers    = RTT_MAX_NUM_UP_BUFFERS;
   p->MaxNumDownBuffers  = RTT_MAX_NUM_DOWN_BUFFERS;
   //
-  // Initialize up buffer 0
+  // Initialize up buffer
   //
-  p->aUp[0].sName         = "Terminal";
-  p->aUp[0].pBuffer       = _acUpBuffer;
-  p->aUp[0].SizeOfBuffer  = BUFFER_SIZE_UP;
-  p->aUp[0].RdOff         = 0u;
-  p->aUp[0].WrOff         = 0u;
-  p->aUp[0].Flags         = RTT_MODE_DEFAULT;
+  /*#RTT_UP_BUFFERS_INITIALIZATION#*/
   //
-  // Initialize down buffer 0
+  // Initialize down buffer
   //
-  p->aDown[0].sName         = "Terminal";
-  p->aDown[0].pBuffer       = _acDownBuffer;
-  p->aDown[0].SizeOfBuffer  = BUFFER_SIZE_DOWN;
-  p->aDown[0].RdOff         = 0u;
-  p->aDown[0].WrOff         = 0u;
-  p->aDown[0].Flags         = RTT_MODE_DEFAULT;
+  /*#RTT_DOWN_BUFFERS_INITIALIZATION#*/
   //
   // Finish initialization of the control block.
   // Copy Id string in three steps to make sure "XXXXXX RTT" is not found
@@ -291,7 +279,12 @@ static void _DoInit(void) {
   //
   STRCPY((char*)&p->acID[7], "RTT");
   RTT__DMB();                       // Force order of memory accessed inside core for cores that allow to change the order
-  STRCPY((char*)&p->acID[0], "XXXXXX");
+  p->acID[0] = 'S';
+  p->acID[1] = 'E';
+  p->acID[2] = 'G';
+  p->acID[3] = 'G';
+  p->acID[4] = 'E';
+  p->acID[5] = 'R';
   RTT__DMB();                       // Force order of memory accessed inside core for cores that allow to change the order
   p->acID[6] = ' ';
   RTT__DMB();                       // Force order of memory accessed inside core for cores that allow to change the order
